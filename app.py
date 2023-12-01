@@ -36,10 +36,19 @@ class Revisores(db.Model):
     IdRevisor = db.Column(db.Integer, primary_key=True)
     NombreRevisor = db.Column(db.String(100))
 
+    def __init__(self, IdRevisor, NombreRevisor):
+        self.IdRevisor = IdRevisor
+        self.NombreRevisor = NombreRevisor
+
 class Inspectores(db.Model):
     IdInspector = db.Column(db.Integer, primary_key=True)
     IdRevisor = db.Column(db.Integer, db.ForeignKey(Revisores.IdRevisor), primary_key=False)
     NombreInspector = db.Column(db.String(100))
+
+    def __init__(self, IdInspector, IdRevisor, NombreInspector):
+        self.IdInspector = IdInspector
+        self.IdRevisor = IdRevisor
+        self.NombreInspector = NombreInspector
 
 class Obras(db.Model):
     IdObra = db.Column(db.Integer, primary_key=True)
@@ -53,30 +62,28 @@ class Obras(db.Model):
     FechaFin = db.Column(db.Date)
     Prorroga = db.Column(db.Date)
 
+    def __init__(self, IdObra, IdRevisor, NombreObra, Codificacion, FechaContrato, FechaInicio, PlazoDias, IdInspector, FechaFin, Prorroga):
+        self.IdObra = IdObra
+        self.IdRevisor = IdRevisor
+        self.NombreObra = NombreObra
+        self.Codificacion = Codificacion
+        self.FechaContrato = FechaContrato
+        self.FechaInicio = FechaInicio
+        self.PlazoDias = PlazoDias
+        self.IdInspector = IdInspector
+        self.FechaFin = FechaFin
+        self.Prorroga = Prorroga
+
 class Certificados(db.Model):
     IdCertificado = db.Column(db.Integer, primary_key=True)
     # IdRevisor = db.Column(db.Integer, db.ForeignKey(Revisores.IdRevisor), primary_key=False) <- no es necesario porque toda obra tiene solo uno y en todo caso puede obtenerse de alli con un get join etc.
     IdObra = db.Column(db.Integer, db.ForeignKey(Obras.IdObra), primary_key=False)
     FechaDePresentacion = db.Column(db.Date)
 
-    """ def __init__(self, ccNumber, imgUrl, title, year, origin, director1, director1Genre, director2, director2Genre, director3, director3Genre, director4, director4Genre, score, host, date):
-        self.ccNumber = ccNumber
-        self.imgUrl = imgUrl
-        self.title = title
-        self.year = year
-        self.origin = origin
-        self.director1 = director1
-        self.director1Genre = director1Genre
-        self.director2 = director2
-        self.director2Genre = director2Genre
-        self.director3 = director3
-        self.director3Genre = director3Genre
-        self.director4 = director4
-        self.director4Genre = director4Genre
-        self.score = score
-        self.host = host
-        self.date = date """
-
+    def __init__(self, IdCertificado, IdObra, FechaDePresentacion):
+        self.IdCertificado = IdCertificado
+        self.IdObra = IdObra
+        self.FechaDePresentacion = FechaDePresentacion
 
 class RevisorSchema(ma.Schema):
     class Meta:
@@ -106,11 +113,6 @@ class CertificadoSchema(ma.Schema):
 
 certificado_schema = CertificadoSchema()
 certificados_schema = CertificadoSchema(many=True)
-
-@app.route('/prueba')
-def probando():
-    mensajedeprueba = SQLALCHEMY_DATABASE_URI
-    return mensajedeprueba
 
 @app.route('/get/revisores', methods = ['GET'])
 def get_revisores():
@@ -161,7 +163,7 @@ def post_details(id):
 
 ### métodos de creación de registros (POST)
 
-@app.route('/add', methods = ['POST'])
+@app.route('/add-revisor', methods = ['POST'])
 def add_revisor():
     IdRevisor = request.json['IdRevisor']
     NombreRevisor = request.json['NombreRevisor']
@@ -171,7 +173,7 @@ def add_revisor():
     db.session.commit()
     return revisor_schema.jsonify(revisores)
 
-@app.route('/add', methods = ['POST'])
+@app.route('/add-inspector', methods = ['POST'])
 def add_inspector():
     IdInspector = request.json['IdInspector']
     IdRevisor = request.json['IdRevisor']
@@ -182,7 +184,7 @@ def add_inspector():
     db.session.commit()
     return inspector_schema.jsonify(inspectores)
 
-@app.route('/add', methods = ['POST'])
+@app.route('/add-obra', methods = ['POST'])
 def add_obra():
     IdObra = request.json['IdObra']
     IdRevisor = request.json['IdRevisor']
@@ -200,7 +202,7 @@ def add_obra():
     db.session.commit()
     return obra_schema.jsonify(obras)    
 
-@app.route('/add', methods = ['POST'])
+@app.route('/add-certificado', methods = ['POST'])
 def add_certificado():
     IdCertificado = request.json['IdCertificado']
     IdObra = request.json['IdObra']
