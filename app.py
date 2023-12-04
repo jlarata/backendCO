@@ -1,10 +1,10 @@
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, render_template, make_response
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
-#import datetime
+import datetime
 
 import os
 
@@ -113,6 +113,34 @@ class CertificadoSchema(ma.Schema):
 
 certificado_schema = CertificadoSchema()
 certificados_schema = CertificadoSchema(many=True)
+
+@app.route('/')
+def hello():
+    return render_template('index.html', utc_dt=datetime.datetime.utcnow())
+
+@app.route('/revisores')
+def revisores():
+    return render_template('revisores.html')
+
+@app.route('/inspectores')
+def inspectores():
+    return render_template('inspectores.html')
+
+@app.route('/obras')
+def obras():
+    all_obras_by_codificacion = Obras.query.order_by(Obras.Codificacion).all()
+    results = obras_schema.dump(all_obras_by_codificacion)
+
+    all_revisores = Revisores.query.all()
+    revisores_results = revisores_schema.dump(all_revisores)
+    return render_template('obras.html', json_de_obras=results, json_de_revisores=revisores_results)
+
+@app.route('/certificados')
+def certificados():
+    return render_template('certificados.html')
+
+
+
 
 @app.route('/get/revisores', methods = ['GET'])
 def get_revisores():

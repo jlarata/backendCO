@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %} {% endblock %} - FlaskApp </title>
+        <style>
+            nav {
+                color: #d64161;
+                font-size:3em;
+                margin-left: 50px;
+            }
+            nav a {
+                color: #d64161;
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <nav>
+            <!-- el nombre de la ruta sale del método definido en el backend -->
+            <a href="{{ url_for('hello') }}">Inicio</a> |
+            <a href="{{ url_for('revisores')}}">Revisores</a> |
+            <a href="{{ url_for('inspectores')}}">Inspectores</a> |
+            <a href="{{ url_for('obras')}}">Obras</a> |
+            <a href="{{ url_for('certificados')}}">Certificados</a>
+        </nav>
+        <hr>
+        <div class="content">
+            {% block content %} {% endblock %}
+        </div>
+    </body>
+</html>

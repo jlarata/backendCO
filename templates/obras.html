@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1> {% block title %} Obras {% endblock %}</h1>
+<h3>En esta sección se despliegan todas las obras cargadas</h3>
+
+{% for obra in json_de_obras %}
+<ul> 
+    <li>Obra: {{ obra.Codificacion }}, {{ obra.NombreObra }}</li>
+    <li>Id de la Obra: {{ obra.IdObra }}, Id del Inspector: {{ obra.IdInspector }}</li>
+
+    <li>Revisor: ID# {{ json_de_revisores.IdRevisor }}, {% for revisor in json_de_revisores %}
+        {% if revisor.IdRevisor == obra.IdRevisor %}
+        {{ revisor.NombreRevisor }}
+        {% endif %}
+        {% endfor %} </li>
+
+
+    <li>Fecha de Contrato: {{ obra.FechaContrato }}</li>
+    <li>Fecha de Inicio: {{ obra.FechaInicio }}</li>
+    <li>Plazo en días: {{ obra.PlazoDias }}</li>
+    
+    <li>Fecha Finalización: {{ obra.FechaFin }}</li>
+    <li>¿Prórroga?: {{ obra.Prorroga }}</li>
+
+    
+</ul>
+{% endfor %}
+
+{% endblock %}
