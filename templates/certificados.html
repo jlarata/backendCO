@@ -1,8 +1,51 @@
+
 {% extends 'base.html' %}
+environment.filters[datetime_format] = datetime_format
+
 
 {% block content %}
 
 <h1> {% block title %} Certificados {% endblock %}</h1>
 <h3>En esta sección se pueden consultar los certificados</h3>
 
+
+{% for obra in json_de_obras %}
+{% set UltimaPresentacion = "2001-01-01" %}
+
+<hr>
+<h3>Obra: {{ obra.Codificacion }}, {{ obra.NombreObra }}</h3>
+<ul> 
+    <li>
+        Revisor:
+        {% for revisor in json_de_revisores %}
+            {% if revisor.IdRevisor == obra.IdRevisor %}
+                <i>{{ revisor.NombreRevisor }}</i>
+            {% endif %} 
+        {% endfor %} (Id# {{ obra.IdRevisor }})
+    </li>
+    <hr>
+    <h4>Certificados:</h4>
+        
+
+    {% for certificado in json_de_certificados %}
+    
+        {% if certificado.IdObra == obra.IdObra %}
+            
+                {% if certificado.FechaDePresentacion > UltimaPresentacion %}
+                    {% set UltimaPresentacion = certificado.FechaDePresentacion %}
+                {% endif %}
+            
+                
+
+            <li>Certificado Número {{ certificado.Numero }} (Id#: {{ certificado.IdCertificado }})</li>
+            <p>Presentado con fecha: {{ certificado.FechaDePresentacion }}</p>  
+            {% set coso_str = certificado.FechaDePresentacion %}
+            <p>{{ coso_str|truncate(10, True, '', 0)}}</p>
+            
+        {% endif %}
+    {% endfor %}
+
+</ul>
+
+{% endfor %}
 {% endblock %}

@@ -5,4 +5,11 @@
 <h1> {% block title %} Revisores {% endblock %}</h1>
 <h3>En esta sección se pueden consultar los revisores</h3>
 
+{% for revisor in json_de_revisores %}
+<ul> 
+    <li>Revisor Id# {{ revisor.IdRevisor }}</li>
+    <li>Nombre del revisor: {{ revisor.NombreRevisor }}</li>
+</ul>
+{% endfor %}
+
 {% endblock %}

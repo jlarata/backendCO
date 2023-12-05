@@ -4,11 +4,18 @@
 
 <h1> {% block title %} Obras {% endblock %}</h1>
 <h3>En esta sección se despliegan todas las obras cargadas</h3>
+<h4>Notar: 1) que se ordenan por codificación y 2) que hay un método for...in en el template que por cada obra revisa su IdRevisor y usa ese dato para recuperar el Nombre del revisor y desplegarlo aquí</h3>
 
 {% for obra in json_de_obras %}
 <ul> 
     <li>Obra: {{ obra.Codificacion }}, {{ obra.NombreObra }}</li>
-    <li>Id de la Obra: {{ obra.IdObra }}, Id del Inspector: {{ obra.IdInspector }}</li>
+    <li>Id de la Obra: {{ obra.IdObra }}, Id del Inspector:
+        {% if obra.IdInspector == None %}
+            No declarado
+        {% else %}
+            {{ obra.IdInspector }}
+        {% endif %}
+    </li>
 
     <li>Revisor: ID# {{ json_de_revisores.IdRevisor }}, {% for revisor in json_de_revisores %}
         {% if revisor.IdRevisor == obra.IdRevisor %}
@@ -21,8 +28,20 @@
     <li>Fecha de Inicio: {{ obra.FechaInicio }}</li>
     <li>Plazo en días: {{ obra.PlazoDias }}</li>
     
-    <li>Fecha Finalización: {{ obra.FechaFin }}</li>
-    <li>¿Prórroga?: {{ obra.Prorroga }}</li>
+    <li>Fecha Finalización:
+        {% if obra.FechaFin == None %}
+            No declarada
+        {% else %}
+            {{ obra.FechaFin }}
+        {% endif %}
+    </li>
+    <li>Prórroga:
+        {% if obra.Prorroga == None %}
+            No declarada
+        {% else %}
+            {{ obra.Prorroga }}
+        {% endif %}
+    </li>
 
     
 </ul>

@@ -5,4 +5,19 @@
 <h1> {% block title %} Inspectores {% endblock %}</h1>
 <h3>En esta sección se despliegan los inspectores</h3>
 
+{% for inspector in json_de_inspectores %}
+<ul> 
+    <li>Inspector Id#: {{ inspector.IdInspector }}</li>
+    <li>Nombre Inspector: {{ inspector.NombreInspector }}</li>
+
+    <li>Asignado a revisor (Id# {{ inspector.IdRevisor }}):
+    {% for revisor in json_de_revisores %}
+        {% if revisor.IdRevisor == inspector.IdRevisor %}
+        {{ revisor.NombreRevisor }}
+        {% endif %}
+        {% endfor %} </li>
+    
+</ul>
+{% endfor %}
+
 {% endblock %}

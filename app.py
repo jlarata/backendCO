@@ -5,6 +5,11 @@ from flask_marshmallow import Marshmallow
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 import datetime
+import jinja2
+
+environment = jinja2.Environment()
+environment.filters['datetime'] = datetime
+
 
 import os
 
@@ -76,12 +81,14 @@ class Obras(db.Model):
 
 class Certificados(db.Model):
     IdCertificado = db.Column(db.Integer, primary_key=True)
+    Numero = db.Column(db.Integer)
     # IdRevisor = db.Column(db.Integer, db.ForeignKey(Revisores.IdRevisor), primary_key=False) <- no es necesario porque toda obra tiene solo uno y en todo caso puede obtenerse de alli con un get join etc.
     IdObra = db.Column(db.Integer, db.ForeignKey(Obras.IdObra), primary_key=False)
     FechaDePresentacion = db.Column(db.Date)
 
-    def __init__(self, IdCertificado, IdObra, FechaDePresentacion):
+    def __init__(self, IdCertificado, Numero, IdObra, FechaDePresentacion):
         self.IdCertificado = IdCertificado
+        self.Numero = Numero
         self.IdObra = IdObra
         self.FechaDePresentacion = FechaDePresentacion
 
@@ -109,7 +116,7 @@ obras_schema = ObraSchema(many=True)
 
 class CertificadoSchema(ma.Schema):
     class Meta:
-        fields = ('IdCertificado', 'IdObra', 'FechaDePresentacion')
+        fields = ('IdCertificado', 'Numero', 'IdObra', 'FechaDePresentacion')
 
 certificado_schema = CertificadoSchema()
 certificados_schema = CertificadoSchema(many=True)
@@ -118,26 +125,47 @@ certificados_schema = CertificadoSchema(many=True)
 def hello():
     return render_template('index.html', utc_dt=datetime.datetime.utcnow())
 
-@app.route('/revisores')
-def revisores():
-    return render_template('revisores.html')
-
-@app.route('/inspectores')
-def inspectores():
-    return render_template('inspectores.html')
-
 @app.route('/obras')
 def obras():
+    #un SELECT de obras, ordenado por su columna Codificacion, que retorna TODAS
     all_obras_by_codificacion = Obras.query.order_by(Obras.Codificacion).all()
     results = obras_schema.dump(all_obras_by_codificacion)
 
+    #un SELECT de revisores, para asociar NombreRevisor a IdRevisor de cada obra en el template
     all_revisores = Revisores.query.all()
+    #atención: devuelve una lista[] de revisores, esa lista va a tener INDICE, al que habrá que referirse
+    #desde el template. o sea, el primer revisor va a ser el 0.
+    #finalmente lo resolví con el template, pero alternativamente podía ordenarse acá usando un 
+    # order_by Revisores.IdRevisor en el método anterior
     revisores_results = revisores_schema.dump(all_revisores)
     return render_template('obras.html', json_de_obras=results, json_de_revisores=revisores_results)
 
+@app.route('/revisores')
+def revisores():
+    #SELECT de revisores, ordenados por campo IdRevisor, desplegados TODOS
+    all_revisores = Revisores.query.order_by(Revisores.IdRevisor).all()
+    revisores_results = revisores_schema.dump(all_revisores)
+    return render_template('revisores.html', json_de_revisores=revisores_results)
+
+@app.route('/inspectores')
+def inspectores():
+    #SELECT de insepctores, ordenados por campo nombreinspector, desplegados TODOS
+    all_inspectores = Inspectores.query.order_by(Inspectores.NombreInspector).all()
+    inspectores_results = inspectores_schema.dump(all_inspectores)
+    #ver approute /obras
+    all_revisores = Revisores.query.all()
+    revisores_results = revisores_schema.dump(all_revisores)
+    return render_template('inspectores.html', json_de_inspectores=inspectores_results, json_de_revisores=revisores_results)
+
 @app.route('/certificados')
 def certificados():
-    return render_template('certificados.html')
+    all_certificados = Certificados.query.order_by(Certificados.FechaDePresentacion).all()
+    certificados_results = certificados_schema.dump(all_certificados)
+    all_obras = Obras.query.order_by(Obras.Codificacion).all()
+    obras_results = obras_schema.dump(all_obras)
+    all_revisores = Revisores.query.all()
+    revisores_results = revisores_schema.dump(all_revisores)
+    return render_template('certificados.html', json_de_obras=obras_results, json_de_certificados=certificados_results, json_de_revisores=revisores_results)
 
 
 
@@ -233,13 +261,22 @@ def add_obra():
 @app.route('/add-certificado', methods = ['POST'])
 def add_certificado():
     IdCertificado = request.json['IdCertificado']
+    Numero = request.json['Numero']
     IdObra = request.json['IdObra']
     FechaDePresentacion = request.json['FechaDePresentacion']
 
-    certificados = Certificados(IdCertificado, IdObra, FechaDePresentacion)
+    certificados = Certificados(IdCertificado, Numero, IdObra, FechaDePresentacion)
     db.session.add(certificados)
     db.session.commit()
     return certificado_schema.jsonify(certificados)
+
+""" @app.template_filter('strftime')
+def _filter_datetime(value, fmt=None):
+    return value.strftime(format)
+    date = dateutil.parser.parse(date)
+    native = date.replace(tzinfo=none)
+    return native.strftime
+ """
 
 
 """ 
