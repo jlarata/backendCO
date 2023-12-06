@@ -5,10 +5,11 @@ from flask_marshmallow import Marshmallow
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 import datetime
-import jinja2
+from datetime import date
+""" import jinja2
 
 environment = jinja2.Environment()
-environment.filters['datetime'] = datetime
+environment.filters['datetime'] = datetime """
 
 
 import os
@@ -157,7 +158,7 @@ def inspectores():
     revisores_results = revisores_schema.dump(all_revisores)
     return render_template('inspectores.html', json_de_inspectores=inspectores_results, json_de_revisores=revisores_results)
 
-@app.route('/certificados')
+""" @app.route('/certificados')
 def certificados():
     all_certificados = Certificados.query.order_by(Certificados.FechaDePresentacion).all()
     certificados_results = certificados_schema.dump(all_certificados)
@@ -166,6 +167,52 @@ def certificados():
     all_revisores = Revisores.query.all()
     revisores_results = revisores_schema.dump(all_revisores)
     return render_template('certificados.html', json_de_obras=obras_results, json_de_certificados=certificados_results, json_de_revisores=revisores_results)
+ """
+@app.route('/certificados')
+def certificados():
+    ###esto me sirve para disponer de todos los certificados
+    all_certificados = Certificados.query.order_by(Certificados.FechaDePresentacion).all()
+    
+    ###esto me devuelve el ultimísimo certificado, pero no distingue entre obras
+    ###finalmente descarté este método
+    ###ultimo_certificado = Certificados.query.order_by(Certificados.FechaDePresentacion.desc()).first()
+    
+    
+    ###esto me retorna todas las obras
+    all_obras = Obras.query.order_by(Obras.Codificacion).all()
+    
+    for obra in all_obras:
+        ultimoCertificadoPorObra = date(2001, 1, 1)
+        for certificado in all_certificados:
+            if certificado.IdObra == obra.IdObra:
+                if certificado.FechaDePresentacion > ultimoCertificadoPorObra:
+                    ultimoCertificadoPorObra = certificado.FechaDePresentacion
+        setattr(obra, "ultimo_certificado", ultimoCertificadoPorObra)
+
+    today = date.today()
+
+    ###estos métodos jsonificaban los resultados, los volé.
+    ###certificados_results = certificados_schema.dump(all_certificados)
+    ###obras_results = obras_schema.dump(all_obras)
+    all_revisores = Revisores.query.all()
+    revisores_results = revisores_schema.dump(all_revisores)
+
+    return render_template('certificados.html', json_de_obras=all_obras, json_de_certificados=all_certificados, json_de_revisores=revisores_results, FechaDeHoy=today)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

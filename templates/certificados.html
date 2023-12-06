@@ -1,7 +1,6 @@
 
 {% extends 'base.html' %}
-environment.filters[datetime_format] = datetime_format
-
+    
 
 {% block content %}
 
@@ -10,7 +9,6 @@ environment.filters[datetime_format] = datetime_format
 
 
 {% for obra in json_de_obras %}
-{% set UltimaPresentacion = "2001-01-01" %}
 
 <hr>
 <h3>Obra: {{ obra.Codificacion }}, {{ obra.NombreObra }}</h3>
@@ -28,24 +26,21 @@ environment.filters[datetime_format] = datetime_format
         
 
     {% for certificado in json_de_certificados %}
-    
-        {% if certificado.IdObra == obra.IdObra %}
-            
-                {% if certificado.FechaDePresentacion > UltimaPresentacion %}
-                    {% set UltimaPresentacion = certificado.FechaDePresentacion %}
-                {% endif %}
-            
-                
+
+        {% if certificado.IdObra == obra.IdObra %}                
 
             <li>Certificado Número {{ certificado.Numero }} (Id#: {{ certificado.IdCertificado }})</li>
             <p>Presentado con fecha: {{ certificado.FechaDePresentacion }}</p>  
-            {% set coso_str = certificado.FechaDePresentacion %}
-            <p>{{ coso_str|truncate(10, True, '', 0)}}</p>
             
         {% endif %}
     {% endfor %}
+    <!-- <p>Último certificado presentado con fecha: {{ obra.ultimo_certificado }}</p> -->
+    {% set TiempoDesdeUltimaPresentacion = FechaDeHoy - obra.ultimo_certificado %}
+    
+    <p> Han pasado {{ TiempoDesdeUltimaPresentacion.days }} días desde la última presentación de certificados de esta obra</p>
 
 </ul>
 
 {% endfor %}
+
 {% endblock %}
