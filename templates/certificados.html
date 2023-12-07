@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
 
-    
-
 {% block content %}
 
 <h1> {% block title %} Certificados {% endblock %}</h1>
@@ -38,16 +36,21 @@
     {% set TiempoDesdeUltimaPresentacion = FechaDeHoy - obra.ultimo_certificado %}
     
     <p> Han pasado {{ TiempoDesdeUltimaPresentacion.days }} días desde la última presentación de certificados de esta obra</p>
-    <button class="button is-success is-rounded">
-        <span>Agregar Certificado</span>
-        <span class="icon is-small">
-            <i class="fas fa-times"></i>
-        </span></button>
+    
+
 
 </ul>
-{% with obra=obra %}
-{% include 'certificadosForm.html' %}
-{% endwith %}
+
+<button class="button is-rounded is-success"
+onclick="AgregarCertificados('{{ obra.IdObra }}')">Agregar Certificado</button>
+<hr>
+
+<div class="box" id="{{ obra.IdObra }}" style="display: none; background-color: lightgray;">
+    {% with obra=obra %}
+        {% include 'certificadosForm.html' %}
+    {% endwith %}
+</div>
+
 
 {% endfor %}
 

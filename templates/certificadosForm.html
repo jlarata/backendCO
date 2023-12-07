@@ -1,4 +1,34 @@
 
-<p>creando certificado para obra: {{ obra.Codificacion }}, {{ obra.NombreObra }}</p>
+
+<div>
+<p>Creando certificado para obra: <b> {{ obra.Codificacion }}, {{ obra.NombreObra }} </b></p>
 
 
+<form method="post">   
+    <label for="IdCertificado">Id Certificado</label>
+    <br>
+    <input type="number" name="IdCertificado"
+    placeholder="Número de Certificado"
+    value="{{ request.form['IdCertificado']}}"></input>
+    <br>
+    <label for="numero">Certificado N°</label>
+    <br>
+    <input type="number" name="Numero"
+    placeholder="Número de Certificado"
+    value=" {{ request.form['Numero']}}"></input>
+    <br>
+    <label for="IdObra">IdObra</label>
+    <br>
+    <input type="number" name="IdObra"
+    placeholder="{{obra.IdObra}}"
+    value="{{ request.form['IdObra']}}"></input>
+    <br>
+    <label for="FechaDePresentacion">Fecha de presentación</label>
+    <br>
+    <input type="date" name="FechaDePresentacion"
+    placeholder="Fecha de ingreso"
+    value=" {{ request.form['FechaDePresentacion']}}"></input>
+    <br>
+    <button type="submit">Crear</button>
+</form>
+</div>

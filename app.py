@@ -306,17 +306,20 @@ def add_obra():
     db.session.commit()
     return obra_schema.jsonify(obras)    
 
-@app.route('/add-certificado', methods = ['POST'])
+@app.route('/certificados', methods = ['POST'])
 def add_certificado():
-    IdCertificado = request.json['IdCertificado']
-    Numero = request.json['Numero']
-    IdObra = request.json['IdObra']
-    FechaDePresentacion = request.json['FechaDePresentacion']
+    IdCertificado = request.form['IdCertificado']
+    Numero = request.form['Numero']
+    IdObra = request.form['IdObra']
+    FechaDePresentacion = request.form['FechaDePresentacion']
 
     certificados = Certificados(IdCertificado, Numero, IdObra, FechaDePresentacion)
     db.session.add(certificados)
     db.session.commit()
-    return certificado_schema.jsonify(certificados)
+    mensaje='El certificado ha sido creado con éxito'
+    return render_template('exito.html', mensaje=mensaje)
+
+    """return certificado_schema.jsonify(certificados)"""
 
 """ @app.template_filter('strftime')
 def _filter_datetime(value, fmt=None):
