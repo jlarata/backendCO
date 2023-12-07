@@ -4,47 +4,79 @@
 
 <h1> {% block title %} Obras {% endblock %}</h1>
 <h3>En esta sección se despliegan todas las obras cargadas</h3>
-<h4>Notar: 1) que se ordenan por codificación y 2) que hay un método for...in en el template que por cada obra revisa su IdRevisor y usa ese dato para recuperar el Nombre del revisor y desplegarlo aquí</h3>
+<p>Notar: 1) que se ordenan por codificación y 2) que hay un método for...in en el template que por cada obra revisa su IdRevisor y usa ese dato para recuperar el Nombre del revisor y desplegarlo aquí</p>
 
 {% for obra in json_de_obras %}
-<ul> 
-    <li>Obra: {{ obra.Codificacion }}, {{ obra.NombreObra }}</li>
-    <li>Id de la Obra: {{ obra.IdObra }}, Id del Inspector:
-        {% if obra.IdInspector == None %}
-            No declarado
-        {% else %}
-            {{ obra.IdInspector }}
-        {% endif %}
-    </li>
-
-    <li>Revisor: ID# {{ json_de_revisores.IdRevisor }}, {% for revisor in json_de_revisores %}
-        {% if revisor.IdRevisor == obra.IdRevisor %}
-        {{ revisor.NombreRevisor }}
-        {% endif %}
-        {% endfor %} </li>
 
 
-    <li>Fecha de Contrato: {{ obra.FechaContrato }}</li>
-    <li>Fecha de Inicio: {{ obra.FechaInicio }}</li>
-    <li>Plazo en días: {{ obra.PlazoDias }}</li>
+<div class="content" style="display: flex; flex-direction: column; align-items: center; ">
     
-    <li>Fecha Finalización:
-        {% if obra.FechaFin == None %}
-            No declarada
-        {% else %}
-            {{ obra.FechaFin }}
-        {% endif %}
-    </li>
-    <li>Prórroga:
-        {% if obra.Prorroga == None %}
-            No declarada
-        {% else %}
-            {{ obra.Prorroga }}
-        {% endif %}
-    </li>
-
-    
-</ul>
+    <h4>Obra: {{ obra.Codificacion }}, {{ obra.NombreObra }}</th></h4>
+    <table class="table is-striped is-bordered is-narrow" style="table-layout:fixed; max-width: 600px;"> 
+        <tbody>
+            <tr>
+                <th>Id de la Obra </th>
+                <td>{{ obra.IdObra }}</td>
+            </tr>
+            <tr>
+                <th>Inspector</th>
+                <td>
+                    {% if obra.IdInspector == None %}
+                        No declarado
+                    {% else %}
+                        {% for inspector  in all_inspectores %}
+                            {% if inspector.IdInspector == obra.IdInspector %}
+                                (Id# {{ inspector.IdInspector }}) {{ inspector.NombreInspector }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Revisor</th>
+                <td>
+                        {% for revisor in json_de_revisores %}
+                            {% if revisor.IdRevisor == obra.IdRevisor %}
+                                (Id# {{ revisor.IdRevisor }}) {{ revisor.NombreRevisor }}
+                            {% endif %}
+                        {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Fecha de Contrato</th>
+                <td>{{ obra.FechaContrato }}</td>
+            </tr>
+            <tr>
+                <th>Fecha de Inicio</th>
+                <td>{{ obra.FechaInicio }}</td>
+            </tr>
+            <tr>
+                <th>Plazo en días</th>
+                <td>{{ obra.PlazoDias }}</td>
+            </tr>
+            <tr>
+                <th>Fecha Finalización</th>
+                <td>
+                    {% if obra.FechaFin == None %}
+                        No declarada
+                    {% else %}
+                        {{ obra.FechaFin }}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Prórroga</th>
+                <td>
+                    {% if obra.Prorroga == None %}
+                        No declarada
+                    {% else %}
+                        {{ obra.Prorroga }}
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>  
+    </table>
+</div>
 {% endfor %}
 
 {% endblock %}

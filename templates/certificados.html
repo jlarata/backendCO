@@ -1,5 +1,5 @@
-
 {% extends 'base.html' %}
+
     
 
 {% block content %}
@@ -38,8 +38,16 @@
     {% set TiempoDesdeUltimaPresentacion = FechaDeHoy - obra.ultimo_certificado %}
     
     <p> Han pasado {{ TiempoDesdeUltimaPresentacion.days }} días desde la última presentación de certificados de esta obra</p>
+    <button class="button is-success is-rounded">
+        <span>Agregar Certificado</span>
+        <span class="icon is-small">
+            <i class="fas fa-times"></i>
+        </span></button>
 
 </ul>
+{% with obra=obra %}
+{% include 'certificadosForm.html' %}
+{% endwith %}
 
 {% endfor %}
 

@@ -139,7 +139,8 @@ def obras():
     #finalmente lo resolví con el template, pero alternativamente podía ordenarse acá usando un 
     # order_by Revisores.IdRevisor en el método anterior
     revisores_results = revisores_schema.dump(all_revisores)
-    return render_template('obras.html', json_de_obras=results, json_de_revisores=revisores_results)
+    all_inspectores = Inspectores.query.order_by(Inspectores.NombreInspector).all()
+    return render_template('obras.html', json_de_obras=results, json_de_revisores=revisores_results, all_inspectores=all_inspectores)
 
 @app.route('/revisores')
 def revisores():
