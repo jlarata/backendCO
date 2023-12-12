@@ -68,8 +68,7 @@ class Obras(db.Model):
     FechaFin = db.Column(db.Date)
     Prorroga = db.Column(db.Date)
 
-    def __init__(self, IdObra, IdRevisor, NombreObra, Codificacion, FechaContrato, FechaInicio, PlazoDias, IdInspector, FechaFin, Prorroga):
-        self.IdObra = IdObra
+    def __init__(self, IdRevisor, NombreObra, Codificacion, FechaContrato, FechaInicio, PlazoDias, IdInspector, FechaFin, Prorroga):
         self.IdRevisor = IdRevisor
         self.NombreObra = NombreObra
         self.Codificacion = Codificacion
@@ -87,8 +86,7 @@ class Certificados(db.Model):
     IdObra = db.Column(db.Integer, db.ForeignKey(Obras.IdObra), primary_key=False)
     FechaDePresentacion = db.Column(db.Date)
 
-    def __init__(self, IdCertificado, Numero, IdObra, FechaDePresentacion):
-        self.IdCertificado = IdCertificado
+    def __init__(self, Numero, IdObra, FechaDePresentacion):
         self.Numero = Numero
         self.IdObra = IdObra
         self.FechaDePresentacion = FechaDePresentacion
@@ -307,17 +305,37 @@ def add_obra():
     return obra_schema.jsonify(obras)    
 
 @app.route('/certificados', methods = ['POST'])
-def add_certificado():
-    IdCertificado = request.form['IdCertificado']
+def add_certificado_from_template():
     Numero = request.form['Numero']
     IdObra = request.form['IdObra']
     FechaDePresentacion = request.form['FechaDePresentacion']
 
-    certificados = Certificados(IdCertificado, Numero, IdObra, FechaDePresentacion)
+    certificados = Certificados(Numero, IdObra, FechaDePresentacion)
     db.session.add(certificados)
     db.session.commit()
     mensaje='El certificado ha sido creado con éxito'
     return render_template('exito.html', mensaje=mensaje)
+
+@app.route('/obras', methods = ['POST'])
+def add_obra_from_template():
+    IdRevisor = request.form['IdRevisor']
+    NombreObra = request.form['NombreObra']
+    Codificacion = request.form['Codificacion']
+    FechaContrato = request.form['FechaContrato']
+    FechaInicio = request.form['FechaInicio']
+    PlazoDias = request.form['PlazoDias']
+    IdInspector = request.form['IdInspector']
+    FechaFin = request.form['FechaFin']
+    Prorroga = request.form['Prorroga']
+
+
+    obras = Obras(IdRevisor, NombreObra, Codificacion, FechaContrato, FechaInicio, PlazoDias, IdInspector, FechaFin, Prorroga)
+    db.session.add(obras)
+    db.session.commit()
+    mensaje='La obra ha sido creada con éxito'
+    return render_template('exito.html', mensaje=mensaje)
+
+
 
     """return certificado_schema.jsonify(certificados)"""
 

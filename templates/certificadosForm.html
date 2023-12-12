@@ -5,12 +5,12 @@
 
 
 <form method="post">   
-    <label for="IdCertificado">Id Certificado</label>
+    <!-- <label for="IdCertificado">Id Certificado</label>
     <br>
     <input type="number" name="IdCertificado"
     placeholder="Número de Certificado"
     value="{{ request.form['IdCertificado']}}"></input>
-    <br>
+    <br> -->
     <label for="numero">Certificado N°</label>
     <br>
     <input type="number" name="Numero"
@@ -20,8 +20,7 @@
     <label for="IdObra">IdObra</label>
     <br>
     <input type="number" name="IdObra"
-    placeholder="{{obra.IdObra}}"
-    value="{{ request.form['IdObra']}}"></input>
+    value="{{obra.IdObra}}"></input>
     <br>
     <label for="FechaDePresentacion">Fecha de presentación</label>
     <br>
