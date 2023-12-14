@@ -1,0 +1,63 @@
+
+
+<div>
+    <p>Creando nueva obra </b></p>
+
+    
+    <form method="post">   
+        <label for="IdRevisor"> Revisor </label>
+        <br>
+        <input type="number" name="IdRevisor"
+        placeholder=""
+        value=" {{ request.form['IdRevisor']}}"></input>
+        <br>
+        <label for="NombreObra"> Nombre de la obra </label>
+        <br>
+        <input type="text" name="NombreObra"
+        placeholder="Nombre de la Obra"
+        value=" {{ request.form['NombreObra']}}"></input>
+        <br>
+        <label for="Codificacion"> Codificacion </label>
+        <br>
+        <input type="text" name="Codificacion"
+        placeholder="Codificacion"
+        value=" {{ request.form['Codificacion']}}"></input>
+        <br>
+        <label for="FechaContrato"> Fecha Contrato </label>
+        <br>
+        <input type="date" name="FechaContrato"
+        placeholder="Fecha de Contrato"
+        value=" {{ request.form['FechaContrato']}}"></input>
+        <br>
+        <label for="FechaInicio">Fecha de Inicio  </label>
+        <br>
+        <input type="date" name="FechaInicio"
+        placeholder="Fecha de Inicio"
+        value=" {{ request.form['FechaInicio']}}"></input>
+        <br>
+        <label for="PlazoDias"> Plazo (Dias) </label>
+        <br>
+        <input type="number" name="PlazoDias"
+        placeholder="Plazo (Dias) "
+        value=" {{ request.form['PlazoDias']}}"></input>
+        <br>
+        <label for="IdInspector"> Inspector </label>
+        <br>
+        <input type="number" name="IdInspector"
+        placeholder="Inspector"
+        value=" {{ request.form['IdInspector']}}"></input>
+        <br>
+        <label for="FechaFin">Fecha de Finalizada</label>
+        <br>
+        <input type="date" name="FechaFin"
+        value="{{ request.form['FechaFin']}}""></input>
+        <br>
+        <label for="Prorroga">Prorroga</label>
+        <br>
+        <input type="date" name="Prorroga"
+        placeholder="Prorroga"
+        value=" {{ request.form['Prorroga']}}"></input>
+        <br>
+        <button type="submit">Crear</button>
+    </form>
+    </div>

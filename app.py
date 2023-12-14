@@ -69,15 +69,15 @@ class Obras(db.Model):
     Prorroga = db.Column(db.Date)
 
     def __init__(self, IdRevisor, NombreObra, Codificacion, FechaContrato, FechaInicio, PlazoDias, IdInspector, FechaFin, Prorroga):
-        self.IdRevisor = IdRevisor
-        self.NombreObra = NombreObra
-        self.Codificacion = Codificacion
-        self.FechaContrato = FechaContrato
-        self.FechaInicio = FechaInicio
-        self.PlazoDias = PlazoDias
-        self.IdInspector = IdInspector
-        self.FechaFin = FechaFin
-        self.Prorroga = Prorroga
+            self.IdRevisor = IdRevisor
+            self.NombreObra = NombreObra
+            self.Codificacion = Codificacion
+            self.FechaContrato = FechaContrato
+            self.FechaInicio = FechaInicio
+            self.PlazoDias = PlazoDias
+            self.IdInspector = IdInspector
+            self.FechaFin = FechaFin
+            self.Prorroga = Prorroga
 
 class Certificados(db.Model):
     IdCertificado = db.Column(db.Integer, primary_key=True)
@@ -139,6 +139,19 @@ def obras():
     revisores_results = revisores_schema.dump(all_revisores)
     all_inspectores = Inspectores.query.order_by(Inspectores.NombreInspector).all()
     return render_template('obras.html', json_de_obras=results, json_de_revisores=revisores_results, all_inspectores=all_inspectores)
+
+@app.route('/obrasForm')
+def obrasForm():
+    
+    #un SELECT de revisores
+    all_revisores = Revisores.query.all()
+    #un SELECT de inspectores
+    all_inspectores = Inspectores.query.all()
+
+    """ revisores_results = revisores_schema.dump(all_revisores)
+    all_inspectores = Inspectores.query.order_by(Inspectores.NombreInspector).all() """
+    return render_template('obrasForm.html', inspectores=all_inspectores, revisores=all_revisores)
+
 
 @app.route('/revisores')
 def revisores():
@@ -264,7 +277,7 @@ def post_details(id):
 
 
 ### métodos de creación de registros (POST)
-
+###1: metodos para usar con postman
 @app.route('/add-revisor', methods = ['POST'])
 def add_revisor():
     IdRevisor = request.json['IdRevisor']
@@ -304,6 +317,12 @@ def add_obra():
     db.session.commit()
     return obra_schema.jsonify(obras)    
 
+
+
+
+### métodos de creación de registros (POST)
+###2: metodos para POST desde TEMPLATE
+
 @app.route('/certificados', methods = ['POST'])
 def add_certificado_from_template():
     Numero = request.form['Numero']
@@ -316,17 +335,33 @@ def add_certificado_from_template():
     mensaje='El certificado ha sido creado con éxito'
     return render_template('exito.html', mensaje=mensaje)
 
-@app.route('/obras', methods = ['POST'])
+@app.route('/obrasForm', methods = ['POST'])
 def add_obra_from_template():
     IdRevisor = request.form['IdRevisor']
     NombreObra = request.form['NombreObra']
     Codificacion = request.form['Codificacion']
-    FechaContrato = request.form['FechaContrato']
-    FechaInicio = request.form['FechaInicio']
-    PlazoDias = request.form['PlazoDias']
+    if (request.form['FechaContrato'] != ''):
+        FechaContrato = request.form['FechaContrato']
+    else:
+        FechaContrato = None
+    if(request.form['FechaInicio'] != ''):
+        FechaInicio = request.form['FechaInicio']
+    else:
+        FechaInicio = None
+    if(request.form['PlazoDias'] != ''):
+        PlazoDias = request.form['PlazoDias']
+    else:
+        PlazoDias = None
     IdInspector = request.form['IdInspector']
-    FechaFin = request.form['FechaFin']
-    Prorroga = request.form['Prorroga']
+    if (request.form['FechaFin'] != ''):
+        FechaFin = request.form['FechaFin']
+    else:
+        FechaFin = None
+    if (request.form['Prorroga'] != ''):
+        Prorroga = request.form['Prorroga']
+    else:
+        Prorroga = None
+    
 
 
     obras = Obras(IdRevisor, NombreObra, Codificacion, FechaContrato, FechaInicio, PlazoDias, IdInspector, FechaFin, Prorroga)
