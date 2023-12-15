@@ -148,8 +148,6 @@ def obrasForm():
     #un SELECT de inspectores
     all_inspectores = Inspectores.query.all()
 
-    """ revisores_results = revisores_schema.dump(all_revisores)
-    all_inspectores = Inspectores.query.order_by(Inspectores.NombreInspector).all() """
     return render_template('obrasForm.html', inspectores=all_inspectores, revisores=all_revisores)
 
 
@@ -338,6 +336,7 @@ def add_certificado_from_template():
 @app.route('/obrasForm', methods = ['POST'])
 def add_obra_from_template():
     IdRevisor = request.form['IdRevisor']
+    IdInspector = request.form['IdInspector']
     NombreObra = request.form['NombreObra']
     Codificacion = request.form['Codificacion']
     if (request.form['FechaContrato'] != ''):
@@ -352,7 +351,6 @@ def add_obra_from_template():
         PlazoDias = request.form['PlazoDias']
     else:
         PlazoDias = None
-    IdInspector = request.form['IdInspector']
     if (request.form['FechaFin'] != ''):
         FechaFin = request.form['FechaFin']
     else:

@@ -5,7 +5,6 @@
 <h1> {% block title %} Obras {% endblock %}</h1>
 <h3>En esta sección se despliegan todas las obras cargadas</h3>
 <a href="{{ url_for('obrasForm')}}"><button class="button is-rounded is-success">Crear nueva obra</button></a>
-<p>Notar: 1) que se ordenan por codificación y 2) que hay un método for...in en el template que por cada obra revisa su IdRevisor y usa ese dato para recuperar el Nombre del revisor y desplegarlo aquí</p>
 
 {% for obra in json_de_obras %}
 

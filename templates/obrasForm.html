@@ -1,23 +1,43 @@
+{% extends 'base.html' %}
 
+{% block content %}
 
-<div>
-    <p>Creando nueva obra </b></p>
+    
+<div class="content" style="display: flex; flex-direction: column; align-items: center;">
+    <h3 class="prueba">Creando nueva obra </h3>
+    <p><i>(los campos con * son obligatorios)</i></p>
 
     
     <form method="post">   
-        <label for="IdRevisor"> Revisor </label>
-        <br>
-        <input type="number" name="IdRevisor"
+        <label for="IdRevisor"> Revisor : </label>
+        <select class="button is-small is-rounded" style="vertical-align: baseline" name="IdRevisor">
+            <option value="" disabled selected hidden>↓ Elegir un revisor ↓</option>
+            {% for revisor in revisores %}
+                <option value="{{ revisor.IdRevisor }}">{{ revisor.NombreRevisor }}</option>
+            {% endfor %}
+        </select>
+        <!-- <input type="number" name="IdRevisor"
         placeholder=""
-        value=" {{ request.form['IdRevisor']}}"></input>
+        value=" {{ request.form['IdRevisor']}}"></input> -->
         <br>
-        <label for="NombreObra"> Nombre de la obra </label>
+        <label for="IdInspector"> Inspector: </label>
+        <select class="button is-small is-rounded" style="vertical-align: baseline" name="IdInspector">
+            <option value="" disabled selected hidden>↓ Elegir un inspector ↓</option>
+            {% for inspector in inspectores %}
+                <option value="{{ inspector.IdInspector }}">{{ inspector.NombreInspector }}</option>
+            {% endfor %}
+        </select>
+        <!-- <input type="number" name="IdInspector"
+        placeholder="Inspector"
+        value=" {{ request.form['IdInspector']}}"></input> -->
+        <br>
+        <label for="NombreObra"> Nombre de la obra *</label>
         <br>
         <input type="text" name="NombreObra"
         placeholder="Nombre de la Obra"
         value=" {{ request.form['NombreObra']}}"></input>
         <br>
-        <label for="Codificacion"> Codificacion </label>
+        <label for="Codificacion"> Codificacion *</label>
         <br>
         <input type="text" name="Codificacion"
         placeholder="Codificacion"
@@ -41,12 +61,6 @@
         placeholder="Plazo (Dias) "
         value=" {{ request.form['PlazoDias']}}"></input>
         <br>
-        <label for="IdInspector"> Inspector </label>
-        <br>
-        <input type="number" name="IdInspector"
-        placeholder="Inspector"
-        value=" {{ request.form['IdInspector']}}"></input>
-        <br>
         <label for="FechaFin">Fecha de Finalizada</label>
         <br>
         <input type="date" name="FechaFin"
@@ -61,3 +75,7 @@
         <button type="submit">Crear</button>
     </form>
     </div>
+
+
+
+    {% endblock %}
